@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Activities</title>
+    <style>
+        .error { color: red; }
+    
+        table {
+        width: 60%;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+      }
+      thead {
+        background-color: #1c87c9;
+        color: #ffffff;
+      }
+      th {
+        text-align: center;
+        height: 50px;
+      }
+      tbody tr:nth-child(odd) {
+        background: #ffffff;
+      }
+      tbody tr:nth-child(even) {
+        background: #f4f4f4;
+      }
+    
+    
+    
+    
+    
+    
+    
+    </style>
+</head>
+<body>
+    <center>
+    <h1>Grade Activities</h1><br>
+    <div>
+        <button onclick="addActivity()">Add Activity</button>
+        <input type="text" id="activity" placeholder="Activity">
+        <input type="number" id="weight" placeholder="Weight">
+    </div><br>
+    <div>
+        <button onclick="addGrade()">Add Grade</button>
+        <input type="number" id="grade" placeholder="Grade">
+        <input type="number" id="activityNo" placeholder="Activity no">
+    </div><br>
+    <br> 
+    <div>
+        <button onclick="deleteActivity()">Delete Activity</button>
+    </div><br><bR>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Activity</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody id="activityTable">
+        </tbody>
+    </table>
+    <div id="errorMessage" class="error"></div>
+
+    <script>
+        let activityCount = 0;
+
+        function addActivity() {
+            const activity = document.getElementById('activity').value;
+            const weight = document.getElementById('weight').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!activity) {
+                errorMessage.textContent = 'Error Message: Activity name is rejected.';
+                return;
+            }
+            if (!weight || weight < 1 || weight > 100) {
+                errorMessage.textContent = 'Error Message: Weight is rejected.';
+                return;
+            }
+
+            activityCount++;
+            const table = document.getElementById('activityTable');
+            const row = table.insertRow();
+            row.insertCell(0).textContent = activityCount;
+            row.insertCell(1).textContent = activity;
+            row.insertCell(2).textContent = `${weight}%`;
+            row.insertCell(3).textContent = '';
+
+            document.getElementById('activity').value = '';
+            document.getElementById('weight').value = '';
+            errorMessage.textContent = '';
+        }
+
+        function addGrade() {
+            const grade = document.getElementById('grade').value;
+            const activityNo = document.getElementById('activityNo').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!grade || grade < 0 || grade > 100) {
+                errorMessage.textContent = 'Error Message: Grade is rejected.';
+                return;
+            }
+            if (!activityNo || activityNo < 1 || activityNo > activityCount) {
+                errorMessage.textContent = 'Error Message: Activity No is rejected.';
+                return;
+            }
+
+            const table = document.getElementById('activityTable');
+            const row = table.rows[activityNo - 1]; // Adjusted to get the correct row (zero-indexed)
+            if (row) {
+                row.cells[3].textContent = grade; // Updated to set the grade in the correct cell
+                errorMessage.textContent = '';
+            } else {
+                errorMessage.textContent = 'Error Message: Activity No is rejected.';
+            }
+
+            document.getElementById('grade').value = '';
+            document.getElementById('activityNo').value = '';
+        }
+
+        function deleteActivity() {
+            const table = document.getElementById('activityTable');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (activityCount > 0) {
+                table.deleteRow(activityCount - 1); // Adjusted to delete the correct row
+                activityCount--;
+                errorMessage.textContent = '';
+            } else {
+                errorMessage.textContent = 'Error Message: No more activities to remove.';
+            }
+        }
+    </script>
+</body>
+</center>
+</html>
